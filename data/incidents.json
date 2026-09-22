@@ -1,0 +1,1 @@
+[{"evidence_id":"INC-1932","service":"payment-authentication","severity":"SEV1","summary":"Previous major-version deployment caused authentication latency and transaction failures.","root_cause":"Connection pool exhaustion after incompatible deployment settings."}]
