@@ -1,0 +1,1 @@
+{"payment-authentication":{"evidence_id":"RB-17","last_updated":"2025-02-11","rollback_validated":false,"summary":"Rollback steps exist but have not been validated for v5.0."},"customer-notifications":{"evidence_id":"RB-21","last_updated":"2026-08-20","rollback_validated":true,"summary":"Rollback procedure validated in staging."}}
