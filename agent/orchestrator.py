@@ -7,7 +7,6 @@ import asyncio, json, os, sys
 from contextlib import AsyncExitStack
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
-from agent.change_risk_agent import assess
 from agent.evidence import collect
 from evals.evaluate import release_gate
 
@@ -19,12 +18,25 @@ async def collect_via_mcp(change_id:str)->dict:
         read,write=await stack.enter_async_context(stdio_client(server))
         session=await stack.enter_async_context(ClientSession(read,write))
         await session.initialize()
-        change=(await session.call_tool("change_request",{"change_id":change_id})).structuredContent
-        if not change: raise ValueError(f"Unknown change: {change_id}")
-        service=change["service"]
+
+        discovered=await session.list_tools()
+        available={tool.name for tool in discovered.tools}
+        missing=set(TOOLS)-available
+        if missing:
+            raise RuntimeError(f"MCP server missing required tools: {sorted(missing)}")
+
         async def call(name,args):
-            r=await session.call_tool(name,args)
-            return r.structuredContent
+            if name not in available:
+                raise RuntimeError(f"MCP tool not discovered: {name}")
+            result=await session.call_tool(name,args)
+            if result.isError:
+                raise RuntimeError(f"MCP tool {name} failed")
+            if result.structuredContent is not None:\n                return result.structuredContent\n            # MCP v1 commonly returns JSON in text content rather than structuredContent.\n            for item in result.content:\n                text_value=getattr(item,"text",None)\n                if text_value:\n                    return json.loads(text_value)\n            return None
+
+        change=await call("change_request",{"change_id":change_id})
+        if not change:
+            raise ValueError(f"Unknown change: {change_id}")
+        service=change["service"]
         return {
           "change":change,
           "incidents":await call("incidents",{"service":service}),
@@ -34,6 +46,9 @@ async def collect_via_mcp(change_id:str)->dict:
           "security":await call("security_controls",{"change_id":change_id})}
 
 async def investigate(change_id:str,use_mcp:bool=True)->dict:
+    # Import the model client only when model reasoning is requested.
+    from agent.change_risk_agent import assess
+
     evidence=await collect_via_mcp(change_id) if use_mcp else collect(change_id)
     gate=release_gate(evidence)
     assessment=assess(evidence)
