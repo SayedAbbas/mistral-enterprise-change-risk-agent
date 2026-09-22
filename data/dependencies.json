@@ -1,0 +1,8 @@
+[
+  {
+    "service": "payment-authentication",
+    "criticality": "tier-1",
+    "dependencies": ["customer-profile", "token-service", "payments-db"],
+    "downstream": ["checkout", "recurring-payments"]
+  }
+]
