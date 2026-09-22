@@ -7,7 +7,6 @@ import asyncio, json, os, sys
 from contextlib import AsyncExitStack
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
-from agent.change_risk_agent import assess
 from agent.evidence import collect
 from evals.evaluate import release_gate
 
@@ -47,6 +46,9 @@ async def collect_via_mcp(change_id:str)->dict:
           "security":await call("security_controls",{"change_id":change_id})}
 
 async def investigate(change_id:str,use_mcp:bool=True)->dict:
+    # Keep the Mistral SDK dependency out of the MCP evidence-only path so
+    # MCP integration tests can validate the tool boundary independently.
+    from agent.change_risk_agent import assess
     evidence=await collect_via_mcp(change_id) if use_mcp else collect(change_id)
     gate=release_gate(evidence)
     assessment=assess(evidence)
