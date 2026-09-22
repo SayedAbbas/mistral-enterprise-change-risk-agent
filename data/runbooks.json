@@ -1,0 +1,9 @@
+[
+  {
+    "service": "payment-authentication",
+    "runbook_id": "RB-77",
+    "rollback_tested": false,
+    "last_review_days": 210,
+    "rollback_target_minutes": 15
+  }
+]

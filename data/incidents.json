@@ -1,0 +1,9 @@
+[
+  {
+    "incident_id": "INC-1932",
+    "service": "payment-authentication",
+    "summary": "Authentication latency increased after schema migration",
+    "severity": "SEV-1",
+    "change_related": true
+  }
+]

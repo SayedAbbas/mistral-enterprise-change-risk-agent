@@ -1,0 +1,8 @@
+[
+  {
+    "change_id": "CHG-4821",
+    "security_review": "approved",
+    "privileged_change": true,
+    "separation_of_duties": true
+  }
+]

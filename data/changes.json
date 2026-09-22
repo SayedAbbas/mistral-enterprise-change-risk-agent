@@ -1,0 +1,11 @@
+[
+  {
+    "change_id": "CHG-4821",
+    "service": "payment-authentication",
+    "summary": "Upgrade authentication service from v4.7 to v5.0",
+    "window": "22:00-23:00 UTC",
+    "schema_change": true,
+    "backward_compatible": false,
+    "owner": "payments-platform"
+  }
+]
