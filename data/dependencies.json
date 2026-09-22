@@ -1,0 +1,1 @@
+{"payment-authentication":[{"evidence_id":"DEP-01","service":"payments-db","criticality":"critical"},{"evidence_id":"DEP-02","service":"fraud-scoring","criticality":"high"}],"customer-notifications":[{"evidence_id":"DEP-03","service":"message-queue","criticality":"medium"}]}
