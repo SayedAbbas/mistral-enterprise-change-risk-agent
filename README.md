@@ -88,21 +88,48 @@ pytest
 ## Repository structure
 
 ```text
-agent/        Mistral reasoning layer
+agent/        Mistral reasoning, evidence and MCP orchestration
 mcp_server/   MCP enterprise evidence server
-evals/        deterministic release gates and evaluations
-tests/        safety/control tests
+evals/        deterministic release gates and repeatable cases
+tests/        safety, citation and control-case tests
+.github/      CI test workflow
+app.py        Streamlit investigation UI
 ```
 
-## Roadmap
+## What is implemented
 
-- Wire the Mistral agent to the MCP client loop
-- Add structured evidence citations
-- Add synthetic multi-change evaluation dataset
-- Measure grounding, tool selection, escalation accuracy and latency
-- Add Streamlit investigation UI
-- Add approval/audit trail
-- Add architecture and demo assets
+- Mistral reasoning with JSON output and evidence-ID citation validation
+- MCP server with six governed enterprise evidence tools
+- MCP client orchestration that discovers/calls the evidence boundary
+- Two synthetic scenarios: a high-risk hero case and a lower-risk control
+- Model-independent deterministic release gate
+- Repeatable evaluation cases and pytest safety tests
+- Streamlit investigation UI
+- GitHub Actions CI
+- Human-in-the-loop production authorization
+
+## Quick demo
+
+```bash
+cp .env.example .env
+# add MISTRAL_API_KEY
+make install
+make test
+make eval
+make demo
+```
+
+For a CLI investigation through MCP:
+
+```bash
+python -m agent.orchestrator CHG-4821
+```
+
+Expected deterministic outcome for the hero scenario: `ESCALATE`. The control case `CHG-4822` should `PASS`.
+
+## Evaluation dimensions
+
+The included deterministic suite validates known release-gate outcomes. The agent layer additionally validates that model-produced evidence citations refer only to evidence IDs actually returned by the enterprise tools. This creates a base for extending the suite with tool-selection accuracy, grounding, escalation accuracy, latency and regression gates.
 
 ## Disclaimer
 
