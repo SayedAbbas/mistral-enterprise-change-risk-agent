@@ -31,7 +31,7 @@ async def collect_via_mcp(change_id:str)->dict:
             result=await session.call_tool(name,args)
             if result.isError:
                 raise RuntimeError(f"MCP tool {name} failed")
-            return result.structuredContent
+            if result.structuredContent is not None:\n                return result.structuredContent\n            # MCP v1 commonly returns JSON in text content rather than structuredContent.\n            for item in result.content:\n                text_value=getattr(item,"text",None)\n                if text_value:\n                    return json.loads(text_value)\n            return None
 
         change=await call("change_request",{"change_id":change_id})
         if not change:
