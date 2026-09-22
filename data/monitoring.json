@@ -1,0 +1,9 @@
+[
+  {
+    "service": "payment-authentication",
+    "error_rate_pct": 2.8,
+    "baseline_error_rate_pct": 0.4,
+    "p95_latency_ms": 680,
+    "baseline_p95_latency_ms": 240
+  }
+]
