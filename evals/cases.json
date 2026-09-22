@@ -1,0 +1,4 @@
+[
+{"change_id":"CHG-4821","expected_gate":"ESCALATE","required_reasons":["non_backward_compatible_schema","rollback_not_tested","error_rate_above_gate","sev1_change_history"]},
+{"change_id":"CHG-4822","expected_gate":"PASS","required_reasons":[]}
+]
